@@ -10,7 +10,7 @@ pipeline
             {
                 script
                 {
-                    cicd.newGit("https://github.com/SAGARSGS/maven.git")
+                      cicd.newGit("https://github.com/SAGARSGS/maven.git")
                 }
             }
         }
@@ -30,9 +30,30 @@ pipeline
             {
                 script
                 {
-                    cicd.newDeploy("sharedlibrary","172.31.81.97","sagar")
+                    cicd.newDeploy("sharedlibrary2","172.31.81.97","sa")
                 }
             }
         }
+        stage('ContinuousTesting')
+        {
+            steps
+            {
+                script
+                {
+                    cicd.newTest("sharedlibrary2")
+                }
+            }
+        }
+        stage('ContinuousDelivery')
+        {
+            steps
+            {
+                script
+                {
+                    cicd.newDeploy("sharedlibrary2","172.31.93.43","ra")
+                }
+            }
+        }    
+        
     }  
 }
