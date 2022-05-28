@@ -1,0 +1,20 @@
+@Library('sharedLibrary')_
+pipeline
+{
+    agent any
+    stages
+    {
+        stage(math)
+        {
+            steps
+            {
+                script
+                {
+                    math.sum(10,20)
+                    math.dev(50,2)
+                }
+            }
+           
+        }
+    }
+}
