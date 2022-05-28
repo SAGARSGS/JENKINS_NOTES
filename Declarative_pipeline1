@@ -1,0 +1,48 @@
+pipeline 
+{
+    agent {
+        label{
+            label 'a'
+        }
+    }
+    stages
+    {
+        stage('continuousdownload')
+        {
+            steps
+            {
+                git 'https://github.com/SAGARSGS/mavenab.git'
+            }
+        }
+        stage('continuousbuild')
+        {
+            steps
+            {
+                sh 'mvn package'
+            }
+        }
+        stage('ContinuousDeployment')
+        {
+            steps
+            {
+                sh 'scp /home/ubuntu/.jenkins/workspace/Declarative_pipeline@2/webapp/target/webapp.war ubuntu@172.31.81.97:/var/lib/tomcat9/webapps/sa.war'
+            }
+        }
+        stage('continuoustesting')
+        {
+            steps
+            {
+               git 'https://github.com/SAGARSGS/FunctionalTesting.git'
+               sh 'java -jar /home/ubuntu/.jenkins/workspace/Declarative_pipeline@2/testing.jar'
+            }
+        }
+        stage('continuousdelivery')
+        {
+            steps
+            {
+                sh 'scp /home/ubuntu/.jenkins/workspace/Declarative_pipeline/webapp/target/webapp.war ubuntu@172.31.93.43:/var/lib/tomcat9/webapps/sa1.war'
+            }
+        }
+    }
+}
+    
