@@ -1,0 +1,102 @@
+pipeline 
+{
+    agent any
+    stages
+    {
+        stage('continuousdownload')
+        {
+            steps
+            {
+                script
+                {
+                    try
+                    {
+                        git 'https://github.com/SAGARSGS/mavenab.git'
+                    }
+                    catch (Exception e1)
+                    {
+                        mail bcc: '', body: 'jenkins can\'t downloads the code git plz check', cc: '', from: '', replyTo: '', subject: 'Continuous Downloads failed', to: 'xyzcompany@gmail.com'
+                    }
+                }
+            }
+           
+        }
+        stage('continuousbuild')
+        {
+            steps
+            {
+                script
+                {
+                   try
+                   {
+                        sh 'mvn package'
+                   }
+                   catch (Exception e2)
+                   {
+                        mail bcc: '', body: 'developer plz check the code artifacts cants created', cc: '', from: '', replyTo: '', subject: 'Continuous Build failed', to: 'abccompany@gmail.com'
+                   }
+                }
+            }
+            
+        }
+        stage('continuousdeployment')
+        {
+            steps
+            {
+                script
+                {
+                    try
+                    {
+                        sh 'scp /home/ubuntu/.jenkins/workspace/Scripted_pipeline/webapp/target/webapp.war ubuntu@172.31.81.97:/var/lib/tomcat9/webapps/sa.war'
+                    }
+                    catch (Exception e3)
+                    {
+                        mail bcc: '', body: 'tomcat is not working middleware team plz check', cc: '', from: '', replyTo: '', subject: 'Continuous Deployment  failed', to: 'defcompany@gmail.com'
+                    }
+                }
+                
+            }    
+        
+        }
+        stage('continuoustesting')
+        {
+            steps
+            {
+                script
+                {
+                    try
+                    {
+                        git 'https://github.com/SAGARSGS/FunctionalTesting.git'
+                        sh 'java -jar /home/ubuntu/.jenkins/workspace/Scripted_try_catch/testing.jar'
+                    }
+                    catch (Exception e4)
+                    {
+                        mail bcc: '', body: 'testers plz check the code ', cc: '', from: '', replyTo: '', subject: 'Continuous Testing  failed', to: 'ghicompany@gmail.com'
+                    }
+                }    
+                
+            }
+        }
+        stage('continuousdelivery')
+        {
+            steps
+            {
+                script
+                {
+                    try
+                    {
+                        input 'need approval'
+                       sh 'scp /home/ubuntu/.jenkins/workspace/Scripted_pipeline/webapp/target/webapp.war ubuntu@172.31.93.43:/var/lib/tomcat9/webapps/sa1.war'
+                    }
+                    catch (Exception e5)
+                    {
+                        mail bcc: '', body: 'workdone', cc: '', from: '', replyTo: '', subject: 'Continuous Delivery   failed', to: 'jklcompany@gmail.com'
+                    }
+                }
+                
+            }
+        }
+    
+    }
+}
+    
