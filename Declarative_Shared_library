@@ -1,0 +1,38 @@
+@Library('sharedLibrary')_
+pipeline
+{
+    agent any
+    stages
+    {
+        stage('ContinuousDownloads')
+        {
+            steps
+            {
+                script
+                {
+                    cicd.newGit("https://github.com/SAGARSGS/maven.git")
+                }
+            }
+        }
+        stage('ContinuousBuild')
+        {
+            steps
+            {
+                script
+                {
+                    cicd.newMaven()
+                }
+            }
+        }
+        stage('ContinuousDeployment')
+        {
+            steps
+            {
+                script
+                {
+                    cicd.newDeploy("sharedlibrary","172.31.81.97","sagar")
+                }
+            }
+        }
+    }  
+}
