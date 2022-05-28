@@ -1,0 +1,26 @@
+node('built-in') 
+{
+    stage('continuousdownload')
+    {
+        git 'https://github.com/SAGARSGS/java'
+    }
+    stage('continuousbuild')
+    {
+        sh 'mvn package'
+    }
+    stage('ContinuousDeployment')
+    {
+        sh 'scp /home/ubuntu/.jenkins/workspace/Scripted_pipeline/webapp/target/webapp.war ubuntu@172.31.81.97:/var/lib/tomcat9/webapps/sa.war'
+    }
+    stage('ContinuousTesting')
+    {
+        git 'https://github.com/SAGARSGS/FunctionalTesting.git'
+        sh 'java -jar /home/ubuntu/.jenkins/workspace/Scripted_pipeline/testing.jar'
+    }
+    stage('ContinuousDelivery')
+    {
+        sh 'scp /home/ubuntu/.jenkins/workspace/Scripted_pipeline/webapp/target/webapp.war ubuntu@172.31.93.43:/var/lib/tomcat9/webapps/sa1.war'
+    }
+        
+}
+    
